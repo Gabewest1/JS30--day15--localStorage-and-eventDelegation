@@ -1,0 +1,43 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif
+}
+.addPlate {
+    
+}
+.bg {
+    background: white;
+}
+.header {
+
+}
+.local-tapas {
+    background: url(background.jpg);
+    background-size: contain;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.plates {
+    background: white;
+    display: inline-block;
+}
+.plates__header {
+    text-align: center;
+}
+.plates__list {
+    padding: 0;
+}
+.plates__plate {
+    align-items: center;
+    background-image: url(square.jpg); 
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: left;
+    display: flex;
+    list-style: square outside none;
+    margin: 0 0 1em 1em;
+    padding-left: 2em;
+}
