@@ -1,20 +1,28 @@
+
 (function() {
-    const plates = document.querySelector(".plates")
+    const plates = document.querySelector(".plates__list")
     const addPlatesInput = document.getElementsByName("addPlate")[0]
     const addPlateForm = document.querySelector(".addPlate")
-
+    
+    createPlateListFromLocalStorage()
     addPlateForm.addEventListener("submit", addPlate)
 
     function addPlate(e) {
         e.preventDefault()
         const plateName = addPlatesInput.value
-        const plate = createListItem(plateName)
+
+        addPlateToLocalStorage(plateName)
+        addPlateToList(plateName)
+    }
+
+    function addPlateToList(plateName) {
+        const plate = createPlateItem(plateName)
         plates.appendChild(plate)
 
         addPlatesInput.value = ""
     }
 
-    function createListItem(name) {
+    function createPlateItem(name) {
         const item = document.createElement("li")
         item.classList.add("plates__plate")
         item.textContent = name
@@ -23,17 +31,36 @@
         return item
     }
     
-    function togglePlateItem(name) {
-        let plate
-        let plateItems = Array.from(document.getElementsByClassName("plates__plate"))
-        console.log("ITEMS:", plateItems)
-        plateItems.forEach((p) => p.textContent === name && (plate = p))
-        console.log(plate)
-        console.log(plate.style["list-style"])
-        if (plate.style["list-style"] === `url("burger.png")`) {
-            plate.style["list-style"] = "square outside none"
+    function getPlatesFromLocalStorage() {
+        //I keep the plates in a comma seperated list but the
+        //rest of my code works with the assumtion that the plates
+        //are in an array.
+        const plates = localStorage.getItem("plates")
+
+        return plates ? plates.split(",") : []
+    }
+
+    function createPlateListFromLocalStorage() {
+        const plates = getPlatesFromLocalStorage()
+
+        plates.forEach(plate => addPlateToList(plate))
+    }
+
+    function addPlateToLocalStorage(plateName) {
+        const plates = getPlatesFromLocalStorage()
+        console.log(plates)
+        plates.push(plateName)
+        localStorage.setItem("plates", plates.join(","))
+    }
+
+    function togglePlateItem(plateName) {
+        const plateItems = Array.from(document.getElementsByClassName("plates__plate"))
+        const plateToToggle = plateItems.filter(plate => plate.textContent === plateName)[0]
+
+        if (plateToToggle.style["background-image"] === `url("burger.png")`) {
+            plateToToggle.style["background-image"] = "url(square.jpg)"
         } else {
-            plate.style["list-style"] = "url(burger.png)"
-        }
+            plateToToggle.style["background-image"] = "url(burger.png)"
+        }   
     }
 })()
