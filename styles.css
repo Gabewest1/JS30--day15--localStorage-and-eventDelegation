@@ -41,3 +41,6 @@ body {
     margin: 0 0 1em 1em;
     padding-left: 2em;
 }
+.plates__plate.checked {
+    background-image: url(burger.png);
+}

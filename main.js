@@ -1,32 +1,43 @@
-
 (function() {
     const plates = document.querySelector(".plates__list")
     const addPlatesInput = document.getElementsByName("addPlate")[0]
     const addPlateForm = document.querySelector(".addPlate")
     
-    createPlateListFromLocalStorage()
+    createPlatesListFromLocalStorage()
     addPlateForm.addEventListener("submit", addPlate)
 
     function addPlate(e) {
         e.preventDefault()
-        const plateName = addPlatesInput.value
 
-        addPlateToLocalStorage(plateName)
-        addPlateToList(plateName)
+        let plate = {
+            name: addPlatesInput.value,
+            checked: false
+        }
+
+        addPlateToLocalStorage(plate)
+        addPlateToList(plate)
     }
 
-    function addPlateToList(plateName) {
-        const plate = createPlateItem(plateName)
-        plates.appendChild(plate)
+    function addPlateToList(plate) {
+        const plateItem = createPlateItem(plate)
+        plates.appendChild(plateItem)
 
         addPlatesInput.value = ""
     }
 
-    function createPlateItem(name) {
+    function createPlateItem(plate) {
         const item = document.createElement("li")
+        const index = plates.children.length        
+
         item.classList.add("plates__plate")
-        item.textContent = name
-        item.addEventListener("click", togglePlateItem.bind(null, name))
+        item.setAttribute("data-index", index)
+        item.textContent = plate.name
+
+        if (plate.checked) {
+            item.classList.add("checked")
+        }
+
+        item.addEventListener("click", togglePlateItem.bind(null, item))
 
         return item
     }
@@ -37,30 +48,33 @@
         //are in an array.
         const plates = localStorage.getItem("plates")
 
-        return plates ? plates.split(",") : []
+        return plates ? JSON.parse(plates) : []
     }
 
-    function createPlateListFromLocalStorage() {
+    function createPlatesListFromLocalStorage() {
         const plates = getPlatesFromLocalStorage()
 
         plates.forEach(plate => addPlateToList(plate))
     }
 
-    function addPlateToLocalStorage(plateName) {
+    function addPlateToLocalStorage(plate) {
         const plates = getPlatesFromLocalStorage()
-        console.log(plates)
-        plates.push(plateName)
-        localStorage.setItem("plates", plates.join(","))
+
+        plates.push(plate)
+        localStorage.setItem("plates", JSON.stringify(plates))
     }
 
-    function togglePlateItem(plateName) {
-        const plateItems = Array.from(document.getElementsByClassName("plates__plate"))
-        const plateToToggle = plateItems.filter(plate => plate.textContent === plateName)[0]
-
-        if (plateToToggle.style["background-image"] === `url("burger.png")`) {
-            plateToToggle.style["background-image"] = "url(square.jpg)"
+    function togglePlateItem(plate) {
+        let plates = getPlatesFromLocalStorage()
+        let index = plate.getAttribute("data-index")
+        
+        if (plate.classList.contains("checked")) {
+            plate.classList.remove("checked")
         } else {
-            plateToToggle.style["background-image"] = "url(burger.png)"
-        }   
+            plate.classList.add("checked")
+        }
+
+        plates[index].checked = !plates[index].checked
+        localStorage.setItem("plates", JSON.stringify(plates))
     }
 })()
