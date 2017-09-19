@@ -41,6 +41,7 @@ body {
     list-style: square outside none;
     margin-bottom: 1em;
     padding-left: 2em;
+    position: relative;
 }
 .plates__plate.checked {
     background-image: url(burger.png);
@@ -48,4 +49,10 @@ body {
 
 .addPlate input[name="addPlate"], .addPlate button {
     padding: 10px 15px;
+}
+
+.delete-plate {
+    position: absolute;
+    right: 0;
+    cursor: pointer;
 }
